@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Varal de Cartinhas</title>
+    <link rel="stylesheet" href="../css/style.css">
+    
+</head>
+<body>
+  <header>
+    <div class="container-header">
+      <nav class="nav-menu">
+        <ul class="menu-esquerda">
+          <li><a href="index.html">Início</a></li>
+          <li><a href="cartinhas.html">Varal Virtual</a></li>
+          <li><a href="carrinho.html">Carrinho</a></li>
+          <li><a href="pontos.html">Pontos de Coleta</a></li>
+        </ul>
+        <ul class="menu-direita">
+          <li><a href="login.html">Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+    <main>
+    <section class="apresentacao">
+      <div class="nuvem-container">
+        <img src="../imagens/banner-varal-nuvem.png" alt="nuvem" class="nuvem" width="400">
+        <br>
+      </div>
+
+      <h2>Escolha um Sonho</h2>
+      <p>Veja as cartinhas disponíveis e escolha um sonho para realizar!</p>
+
+      <div class="cartinhas">
+        <iframe class="airtable-embed" src="https://airtable.com/embed/appWObWnrpNMXVv4I/shrCUFE5vpsT6WH4g?layout=card" frameborder="0" onmousewheel="" width="1200" height="320" style="background: transparent; border: 1px solid #ccc;">
+        </iframe>
+      </div>
+    </section>
+  </main>
+
+    <footer>
+        <p>© 2025 Varal dos Sonhos | Desenvolvido com amor 💙</p>
+    </footer>
+
+    <script type="module">
+      import Airtable from "./models/Airtable.js";
+
+      // Parâmetros de conexão
+      const token = "SEU_TOKEN_AQUI";
+      const baseId = "appWObWnrpNMXVv4I";
+      
+      const airtable = new Airtable(token, baseId);
+
+      // Chamada do novo método da Model, que já cuida da exibição na View
+      airtable.carregarEExibirCartinhas("Cartinhas", "lista");
+      
+    </script>
+</body>
+</html>
