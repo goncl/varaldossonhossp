@@ -6,6 +6,7 @@ const crypto = require('crypto');
 
 // Importante: O Vercel gerencia as variáveis de ambiente
 // Acesse-as via process.env
+// comentario
 const AIRTABLE_PERSONAL_ACCESS_TOKEN = process.env.AIRTABLE_PERSONAL_ACCESS_TOKEN;
 const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID;
 
