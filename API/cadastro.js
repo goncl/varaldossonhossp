@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
         return res.status(405).json({ error: 'Método não permitido.' });
     }
 
-    // 1. Receber dados
+    // 1. Receber dados (CORREÇÃO: Lendo 'tipo_usuario' conforme o Front-end envia)
     const { nome, email, senha, endereco, telefone, tipo_usuario } = req.body;
 
     if (!email || !senha || !tipo_usuario) {
@@ -26,12 +26,22 @@ module.exports = async (req, res) => {
     }
 
     try {
-        // 2. Segurança: HASH da Senha
+        // --- OTIMIZAÇÃO: 1. Checar se o E-mail já existe ---
+        const existingUsers = await base('usuarios').select({
+            maxRecords: 1,
+            filterByFormula: `{Email} = '${email}'`
+        }).firstPage();
+
+        if (existingUsers.length > 0) {
+            return res.status(409).json({ error: 'Este e-mail já está cadastrado.' });
+        }
+        
+        // 2. Segurança: HASH da Senha e Geração de ID
         const saltRounds = 10;
         const senhaHash = await bcrypt.hash(senha, saltRounds);
         const userId = crypto.randomUUID(); 
 
-        // --- ETAPA 1: Inserção na Tabela 'usuarios' (Dados de Login) ---
+        // --- ETAPA 2: Inserção na Tabela 'usuarios' (Dados de Login) ---
         await base('usuarios').create([
             {
                 fields: {
@@ -39,34 +49,40 @@ module.exports = async (req, res) => {
                     'Nome': nome,
                     'Email': email,
                     'Senha': senhaHash,
-                    'Tipo': tipo_usuario, 
+                    'Tipo': tipo_usuario, // Usando o nome correto
                 },
             },
         ]);
 
-        // --- ETAPA 2: Inserção na Tabela de Perfil Específica (Dados Adicionais) ---
+        // --- ETAPA 3: Inserção na Tabela de Perfil Específica (Dados Adicionais) ---
         let profileTable;
         let profileFields = {
-            'Endereco': endereco,
-            'Telefone': telefone,
             'UsuarioId': userId, // Para ligação no Airtable
         };
 
         if (tipo_usuario === 'Doador') {
             profileTable = 'doadores';
+            profileFields['Endereco'] = endereco;
+            profileFields['Telefone'] = telefone;
         } else if (tipo_usuario === 'PontoColeta') {
             profileTable = 'pontoscoleta';
+            profileFields['Endereco'] = endereco;
+            profileFields['Telefone'] = telefone;
         } else {
+            // Se for 'Comum', o cadastro termina após a Etapa 2
             return res.status(201).json({ message: 'Usuário Comum cadastrado com sucesso!' });
         }
 
+        // Se for Doador ou Ponto de Coleta, insere o perfil
         await base(profileTable).create([{ fields: profileFields }]);
 
-        // 3. Resposta de Sucesso
+        // 4. Resposta de Sucesso
         res.status(201).json({ message: `${tipo_usuario} cadastrado com sucesso! ID: ${userId}` });
 
     } catch (error) {
-        console.error('Erro no cadastro:', error.message);
-        res.status(500).json({ error: 'Falha ao cadastrar o usuário.' });
+        // Log para depuração
+        console.error('Erro no cadastro:', error.message, error.stack); 
+        // Resposta genérica para o Front-end
+        res.status(500).json({ error: 'Falha interna ao cadastrar o usuário. Tente novamente.' });
     }
 };
