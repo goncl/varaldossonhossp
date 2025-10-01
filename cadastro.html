@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <!-- Configurações básicas do HTML -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro - Varal dos Sonhos</title>
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="./css/style.css">
+
     <style>
-        /* Estilos básicos para organização - adicione seu CSS real aqui */
+        /* Estilos básicos provisórios - o CSS real deve estar em style.css */
         body { font-family: sans-serif; padding: 20px; }
         form { max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
         div { margin-bottom: 15px; }
@@ -21,9 +23,10 @@
         }
         #mensagem-status { margin-top: 20px; text-align: center; }
     </style>
-    
+ 
 </head>
 <body>
+    <!-- Menu de navegação -->
     <header>
         <div class="container-header">
           <nav class="nav-menu">
@@ -38,46 +41,60 @@
             </ul>
           </nav>
         </div>
-      </header>
+    </header>
 
     <main>
         <section class="apresentacao">
             <h2>Cadastro</h2>
-            <form id='cadastroForm' class="formulario" action="login.html" method="POST">
-                <label for="tipo">Eu quero me cadastrar como:</label>
-            <select id="tipo" name="tipo" required>
-                <option value="">-- Selecione uma opção --</option>
-                <option value="Doador">Doador</option>
-                <option value="PontoColeta">Ponto de Coleta</option>
-                <option value="Comum">Usuário Comum (apenas visualização)</option>
-            </select>
-            <div>
-            <label for="nome">Nome Completo:</label>
-            <input type="text" id="nome" name="nome" required>
-            </div>
-            <div>
-                <label for="email">E-mail:</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            <div>
-                <label for="senha">Senha:</label>
-                <input type="password" id="senha" name="senha" required>
-            </div>
 
-            <div id="campos-perfil">
-                <hr>
-                <h3>Informações de Contato</h3>
+            <!-- Formulário de cadastro -->
+            <form id='cadastroForm' class="formulario" action="login.html" method="POST">
+                
+                <!-- Escolha do tipo de usuário -->
+                <label for="tipo">Eu quero me cadastrar como:</label>
+                <select id="tipo" name="tipo" required>
+                    <option value="">-- Selecione uma opção --</option>
+                    <option value="Doador">Doador</option>
+                    <option value="PontoColeta">Ponto de Coleta</option>
+                    <option value="Comum">Usuário Comum (apenas visualização)</option>
+                </select>
+
+                <!-- Campo nome -->
                 <div>
-                    <label for="endereco">Endereço Completo:</label>
-                    <input type="text" id="endereco" name="endereco" required>
+                    <label for="nome">Nome Completo:</label>
+                    <input type="text" id="nome" name="nome" required>
                 </div>
+
+                <!-- Campo email -->
                 <div>
-                    <label for="telefone">Telefone (Ex: 99 99999-9999):</label>
-                    <input type="text" id="telefone" name="telefone" required>
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email" required>
                 </div>
-            </div>
+
+                <!-- Campo senha -->
+                <div>
+                    <label for="senha">Senha:</label>
+                    <input type="password" id="senha" name="senha" required>
+                </div>
+
+                <!-- Campos extras (endereço e telefone) só aparecem para Doador/PontoColeta -->
+                <div id="campos-perfil">
+                    <hr>
+                    <h3>Informações de Contato</h3>
+                    <div>
+                        <label for="endereco">Endereço Completo:</label>
+                        <input type="text" id="endereco" name="endereco" required>
+                    </div>
+                    <div>
+                        <label for="telefone">Telefone:</label>
+                        <input type="text" id="telefone" name="telefone" required>
+                    </div>
+                </div>
+
                 <button type="submit" class="btn">Cadastrar</button>
             </form>
+
+            <!-- Mensagem de status exibida após tentativa de cadastro -->
             <div id="mensagem-status"></div>
         </section>
     </main>
@@ -92,30 +109,30 @@
         const camposPerfil = document.getElementById('campos-perfil');
         const statusDiv = document.getElementById('mensagem-status');
 
-        // 1. Lógica para esconder/mostrar campos de perfil (melhora a UX)
+        // (1) Lógica: esconde ou mostra campos extras dependendo do tipo de usuário
         tipo.addEventListener('change', function() {
-            // Se for Doador ou Ponto de Coleta, mostra os campos de endereço/telefone
+             // Se for Doador ou Ponto de Coleta, mostra os campos de endereço/telefone
             const isProfileType = (this.value === 'Doador' || this.value === 'PontoColeta');
             camposPerfil.style.display = isProfileType ? 'block' : 'none';
-            
             // Define a obrigatoriedade dos campos
             document.getElementById('endereco').required = isProfileType;
             document.getElementById('telefone').required = isProfileType;
         });
 
         // Chama a função 'change' na inicialização para esconder por padrão
-        tipo.dispatchEvent(new Event('change')); 
+        tipo.dispatchEvent(new Event('change')); // Executa no carregamento inicial
 
-        // 2. Lógica para enviar o formulário para o Vercel
+        // (2) Lógica: intercepta envio do formulário e envia via fetch para API Vercel
         form.addEventListener('submit', async function(event) {
-            event.preventDefault(); // Impede o envio padrão do formulário
+            event.preventDefault(); // Impede envio normal
 
-            // Coleta todos os dados do formulário
+             // Coleta todos os dados do formulário
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
 
             // CORREÇÃO CRÍTICA: Renomeia 'tipo' (enviado pelo HTML) para 'tipo_usuario' 
             // (esperado pelo Back-end do Vercel)
+            // Ajuste: backend espera "tipo_usuario", não "tipo"
             data.tipo_usuario = data.tipo;
             delete data.tipo;
 
@@ -123,35 +140,32 @@
             statusDiv.style.color = '#007bff';
 
             try {
+
                 // Envia os dados para a sua função Serverless no Vercel
                 const response = await fetch('/api/cadastro', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data),
                 });
 
                 const result = await response.json();
 
                 if (response.ok) {
-                    statusDiv.innerHTML = '✅ Cadastro realizado com sucesso! Redirecionando para o login...';
+                    statusDiv.innerHTML = '✅ Cadastro realizado com sucesso!';
                     statusDiv.style.color = 'green';
                     form.reset(); // Limpa o formulário
-                    
+
                     // Redireciona o usuário para a página de login após 2 segundos
-                    setTimeout(() => {
-                        window.location.href = 'login.html'; 
-                    }, 2000);
-                    
+                    setTimeout(() => { 
+                        window.location.href = 'login.html'; }, 2000);
                 } else {
-                    // Erro retornado pelo Vercel (ex: e-mail já existe)
-                    statusDiv.innerHTML = `❌ Erro no cadastro: ${result.error || 'Tente novamente.'}`;
+
+                     // Erro retornado pelo Vercel (ex: e-mail já existe)
+                    statusDiv.innerHTML = `❌ Erro: ${result.error || 'Tente novamente.'}`;
                     statusDiv.style.color = 'red';
                 }
             } catch (error) {
-                console.error('Erro de rede:', error);
-                statusDiv.innerHTML = '❌ Erro de conexão com o servidor. Verifique sua rede.';
+                statusDiv.innerHTML = '❌ Erro de conexão com o servidor.';
                 statusDiv.style.color = 'red';
             }
         });
