@@ -1,15 +1,23 @@
-// api/testar-airtable.js
+// /api/testar-airtable.js
 
-const Airtable = require('airtable');
+// 1. O import de Airtable é suficiente para JavaScript ESM
+import Airtable from 'airtable'; 
 
-// Inicialize o Airtable com as variáveis de ambiente
+// ATENÇÃO: Use AIRTABLE_API_KEY se você não mudou o nome da variável no Vercel. 
+// Use AIRTABLE_PERSONAL_ACCESS_TOKEN apenas se você renomeou ela.
 const base = new Airtable({ apiKey: process.env.AIRTABLE_PERSONAL_ACCESS_TOKEN })
   .base(process.env.AIRTABLE_BASE_ID);
   
 const TABLE_NAME = process.env.AIRTABLE_TABLE_NAME;
 
-module.exports = async (req, res) => {
-    // Verifique se o método é POST (esperado do formulário)
+// 2. A função de exportação principal (export default)
+export default async function (req, res) { 
+    // Validação de entrada para evitar travamento se os campos não existirem
+    if (!req.body) {
+        return res.status(400).json({ message: 'Dados inválidos na requisição.' });
+    }
+    
+    // Verifique se o método é POST
     if (req.method !== 'POST') {
         res.setHeader('Allow', 'POST');
         return res.status(405).json({ message: 'Método não permitido.' });
@@ -22,11 +30,11 @@ module.exports = async (req, res) => {
             return res.status(400).json({ message: 'Nome e email são obrigatórios.' });
         }
 
-        // 1. O teste principal: Tentar criar um novo registro no Airtable
+        // Lógica COMPLETA do Airtable:
         const records = await base(TABLE_NAME).create([
             {
                 "fields": {
-                    // Mapeie os campos do seu formulário com os nomes exatos das COLUNAS do Airtable
+                    // Mapeie para os NOMES EXATOS das suas colunas no Airtable!
                     "Nome": nome, 
                     "Email": email,
                     "Data do Teste": new Date().toISOString()
@@ -34,7 +42,6 @@ module.exports = async (req, res) => {
             }
         ]);
         
-        // 2. Se a requisição for bem-sucedida, retorne o sucesso
         return res.status(200).json({ 
             message: 'Registro criado com sucesso no Airtable!',
             recordId: records[0].id,
@@ -42,12 +49,13 @@ module.exports = async (req, res) => {
         });
 
     } catch (error) {
-        // 3. Se houver erro, retorne a falha com detalhes
-        console.error("Erro na comunicação com Airtable:", error);
+        // Loga o erro no console do Vercel para diagnóstico
+        console.error("Erro no Airtable:", error.message, error.stack); 
+        
         return res.status(500).json({ 
             message: 'Falha ao comunicar com o Airtable.',
             details: error.message,
-            code: error.code // Ajuda a diagnosticar (ex: AUTHENTICATION_REQUIRED, INVALID_REQUEST_UNKNOWN)
+            code: error.code // O código do erro do Airtable ajuda no diagnóstico
         });
     }
 };
