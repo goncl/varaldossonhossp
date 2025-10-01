@@ -1,50 +1,65 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Varal dos Sonhos</title>
-    <link rel="stylesheet" href="./css/style.css">
+    <title>Teste de Comunicação Vercel-Airtable</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        #status { margin-top: 15px; padding: 10px; border: 1px solid #ccc; min-height: 20px; }
+    </style>
 </head>
-
 <body>
-    <header>
-      <div class="container-header">
-        <nav class="nav-menu">
-          <ul class="menu-esquerda">
-            <li><a href="index.html">Início</a></li>
-            <li><a href="cartinhas.html">Varal Virtual</a></li>
-            <li><a href="carrinho.html">Carrinho</a></li>
-            <li><a href="pontos.html">Pontos de Coleta</a></li>
-          </ul>
-          <ul class="menu-direita">
-            <li><a href="login.html">Login</a></li>
-          </ul>
-        </nav>
-      </div>
-    </header>
+    <h1>Teste de Envio para o Airtable</h1>
 
-    <main>
-      <section class="apresentacao">
-        <div class="nuvem-container">
-          <img src="../imagens/logo-nuvem1.png" alt="nuvem" class="nuvem" width="400">
-          <br>
-          <img src="../imagens/menssagem.png" alt="menssagem" class="nuvem" width="330">
-          <br>
-          <a href="cartinhas.html" class="btn">Quero Adotar um Sonho</a>
-        </div>
-      </section>
-    </main>
+    <form id="airtableForm">
+        <label for="nome">Nome para Teste:</label>
+        <input type="text" id="nome" name="nome" required value="Teste Vercel">
+        
+        <br><br>
+        
+        <label for="email">Email para Teste:</label>
+        <input type="email" id="email" name="email" required value="teste@vercel.com">
+        
+        <br><br>
+        
+        <button type="submit">Enviar Dados de Teste</button>
+    </form>
 
-    <footer>
-        <p>© 2025 Varal dos Sonhos | Desenvolvido com amor 💙</p>
-    </footer>
+    <h2>Status:</h2>
+    <pre id="status">Aguardando envio...</pre>
+
+    <script>
+        document.getElementById('airtableForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = 'Enviando...';
+
+            const nome = document.getElementById('nome').value;
+            const email = document.getElementById('email').value;
+
+            try {
+                // Aponte para o endpoint da sua função serverless no Vercel
+                const response = await fetch('/api/testar-airtable', { // Altere se o caminho for diferente
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ nome, email })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    statusDiv.textContent = 'SUCESSO! Dados enviados ao Airtable.\n\n' + JSON.stringify(data, null, 2);
+                } else {
+                    statusDiv.textContent = `FALHA! Status: ${response.status}. Mensagem: ${data.message || JSON.stringify(data)}`;
+                    console.error(data);
+                }
+
+            } catch (error) {
+                statusDiv.textContent = 'ERRO DE REDE/CÓDIGO: ' + error.message;
+                console.error('Erro geral:', error);
+            }
+        });
+    </script>
 </body>
 </html>
-
-
-
-
-
-  
