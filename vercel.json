@@ -1,13 +1,12 @@
 {
-  "version": 2,
+  "version": 2, // Versão da configuração do Vercel (a mais atual é a 2)
   "builds": [
-    { "src": "api/**/*.js", "use": "@vercel/node" },
-    { "src": "*.html", "use": "@vercel/static" },
-    { "src": "public/**/*", "use": "@vercel/static" }
+    { "src": "api/**/*.js", "use": "@vercel/node" }, // Tudo que estiver dentro de /api será tratado como função serverless Node.js
+    { "src": "*.html", "use": "@vercel/static" },    // Arquivos HTML raiz serão servidos como estáticos
+    { "src": "public/**/*", "use": "@vercel/static" } // Tudo dentro da pasta public também será servido como arquivo estático
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1.js" },
-    { "src": "/(.*)", "dest": "/$1" }
+    { "src": "/api/(.*)", "dest": "/api/$1.js" }, // Roteia chamadas da API (ex: /api/cadastro → api/cadastro.js)
+    { "src": "/(.*)", "dest": "/$1" }             // Roteia o resto dos arquivos (HTML, CSS, imagens, etc.)
   ]
 }
-
