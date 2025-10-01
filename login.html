@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pontos de Coleta - Varal dos Sonhos</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <title>Login - Varal dos Sonhos</title>
+    <link rel="stylesheet" href="./css/style.css">
     
 </head>
 <body>
@@ -28,22 +28,15 @@
         <section class="apresentacao">
             <div class="container-apresentacao">
                 <img src="../imagens/logo-sem-fundo.png" alt="nuvem" class="nuvem" width="400">
-            </div>                
-        </section>
-
-            <h2>Ponto de Coleta</h2>
-            <br>
-            <div class="cartinha">
-                <p>R. Clara Petrela, 113 - Jardim Sao Roberto, São Paulo - 03978-500</p>
+            </div> 
+            <h2>Login</h2>
+            <form class="formulario" action="carrinho.html" method="POST">
+                <input type="text" placeholder="Nome" required>
                 <br>
-                <h3>Edição: Céu Parque Bristol</h3>
-                <p>Responsáveis:
-                    <br>
-                    Organizador:   (11) 95351-2114 (MD)
-                    <br>
-                    Coordenador: (11) 99820-2880 (Letty) - (11) 98686-3697 (Lua) </p>
-                <p></p>
-            </div>
+                <input type="password" placeholder="Senha" required>
+                <button type="submit" class="btn">Iniciar</button>
+            </form>
+            <p>Não tem cadastro? <a href="cadastro.html">Faça seu cadastro aqui</a></p>
         </section>
     </main>
 
