@@ -1,13 +1,13 @@
 {
-  "name": "varal-dos-sonhos-api",
-  "version": "1.0.0",
-  "type": "module",
+  "name": "varal-dos-sonhos-api", // Nome do projeto
+  "version": "1.0.0",             // Versão atual
+  "type": "module",               // Indica que o projeto usa "ESM" (import/export) em vez de require()
   "engines": {
-    "node": "20.x"
+    "node": "20.x"                // Define a versão do Node.js usada (compatível com Vercel)
   },
   "dependencies": {
-    "airtable": "^0.12.2",
-    "bcrypt": "^6.0.0",
-    "bcryptjs": "^3.0.2"
+    "airtable": "^0.12.2",        // Biblioteca para conectar e manipular dados no Airtable
+    "bcrypt": "^6.0.0",           // Biblioteca para criptografar senhas (mais segura, mas exige compilação nativa)
+    "bcryptjs": "^3.0.2"          // Alternativa do bcrypt escrita em JS puro (mais leve, mas menos performática)
   }
 }
