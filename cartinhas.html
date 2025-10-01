@@ -45,18 +45,5 @@
         <p>© 2025 Varal dos Sonhos | Desenvolvido com amor 💙</p>
     </footer>
 
-    <script type="module">
-      import Airtable from "./models/Airtable.js";
-
-      // Parâmetros de conexão
-      const token = "SEU_TOKEN_AQUI";
-      const baseId = "appWObWnrpNMXVv4I";
-      
-      const airtable = new Airtable(token, baseId);
-
-      // Chamada do novo método da Model, que já cuida da exibição na View
-      airtable.carregarEExibirCartinhas("Cartinhas", "lista");
-      
-    </script>
 </body>
 </html>
