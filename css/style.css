@@ -1,104 +1,115 @@
+/* Importa a fonte personalizada do Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Lemon+Tuesday&display=swap');
 
+/* Reset básico de margens, espaçamentos e box-sizing */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* Corpo da página */
 body {
-  font-family: 'Open Sans', sans-serif;
-  background: url('../imagens/fundo-nuvens.png') no-repeat center center fixed;
-  background-size: cover;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  font-family: 'Open Sans', sans-serif; /* Fonte padrão */
+  background: url('../imagens/fundo-nuvens.png') no-repeat center center fixed; /* Imagem de fundo fixa */
+  background-size: cover; /* Faz a imagem preencher toda a tela */
+  min-height: 100vh; /* Garante altura mínima da viewport */
+  display: flex; /* Ativa o flexbox */
+  flex-direction: column; /* Organiza os elementos em coluna */
 }
 
-/* Cabeçalho */
+/* Cabeçalho fixo no topo */
 header {
-  background-color: #4a90e2;
-  padding: 10px 20px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  background-color: #4a90e2; /* Fundo azul */
+  padding: 10px 20px; /* Espaçamento interno */
+  position: sticky; /* Cabeçalho fixo ao rolar */
+  top: 0; /* Fica preso no topo */
+  z-index: 100; /* Fica acima dos outros elementos */
 }
 
+/* Container do cabeçalho (centraliza conteúdo) */
 .container-header {
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 1200px; /* Limite de largura */
+  margin: 0 auto; /* Centraliza */
 }
 
+/* Menu de navegação */
 .nav-menu {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: flex; /* Flexbox para organizar */
+  justify-content: space-between; /* Espaço entre os itens */
+  align-items: center; /* Centraliza verticalmente */
 }
 
-/* Menus */
+/* Listas dos menus */
 .menu-esquerda,
 .menu-direita {
-  display: flex;
-  list-style: none;
+  display: flex; /* Itens lado a lado */
+  list-style: none; /* Remove bolinhas da lista */
 }
 
+/* Espaçamento dos itens de menu */
 .menu-esquerda li,
 .menu-direita li {
   margin: 0 10px;
 }
 
+/* Links do menu */
 .menu-esquerda a,
 .menu-direita a {
-  color: white;
-  text-decoration: none;
-  font-size: 18px;
+  color: white; /* Cor branca */
+  text-decoration: none; /* Remove sublinhado */
+  font-size: 18px; /* Tamanho da fonte */
 }
 
+/* Efeito hover nos links */
 .menu-esquerda a:hover,
 .menu-direita a:hover {
-  text-decoration: underline;
+  text-decoration: underline; /* Sublinha ao passar o mouse */
 }
 
-/* Conteúdo principal */
+/* Área principal da página */
 main {
-  flex: 1;
+  flex: 1; /* Ocupa o espaço restante da tela */
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center; /* Centraliza os itens no eixo horizontal */
   padding: 0px;
 }
 
+/* Seção de apresentação */
 .apresentacao {
-  text-align: center;
+  text-align: center; /* Texto centralizado */
 }
 
+/* Imagem de nuvem */
 .nuvem {
-  margin: 0px auto;
-  max-width: 100%;
-  height: auto;
+  margin: 0px auto; /* Centraliza */
+  max-width: 100%; /* Adapta à tela */
+  height: auto; /* Mantém proporção */
 }
 
+/* Botão genérico */
 .btn {
   display: block;
   margin: 0px auto;
-  padding: 10px 20px;
-  background-color: #5dade2;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 18px;
-  cursor: pointer;
+  padding: 10px 20px; /* Espaçamento interno */
+  background-color: #5dade2; /* Azul claro */
+  color: white; /* Texto branco */
+  border: none; /* Remove borda padrão */
+  border-radius: 10px; /* Bordas arredondadas */
+  font-size: 18px; /* Tamanho da fonte */
+  cursor: pointer; /* Cursor de mãozinha */
 }
 
+/* Efeito hover no botão */
 .btn:hover {
-  background-color: #357ABD;
+  background-color: #357ABD; /* Azul mais escuro */
 }
 
 /* Rodapé */
 footer {
-  text-align: center;
-  padding: 10px;
-  background: rgba(255, 255, 255, 0.8);
-  font-size: 14px;
+  text-align: center; /* Centraliza texto */
+  padding: 10px; /* Espaçamento interno */
+  background: rgba(255, 255, 255, 0.8); /* Fundo branco transparente */
+  font-size: 14px; /* Fonte menor */
 }
-
