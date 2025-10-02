@@ -1,89 +1,97 @@
-// api/cadastro.js
+import Airtable from 'airtable'; 
 
-// Importa biblioteca bcryptjs para criptografar senhas (evita salvar senhas em texto puro)
-import bcrypt from "bcryptjs";
-// Importa o cliente do Airtable para salvar dados no banco
-import Airtable from "airtable";
-// Importa o módulo crypto do Node para gerar IDs únicos
-import crypto from "crypto";
-
-// As variáveis de ambiente (configurações secretas) são controladas pelo Vercel
-// Aqui pegamos a chave de acesso e o ID da base do Airtable
-const AIRTABLE_PERSONAL_ACCESS_TOKEN = process.env.AIRTABLE_PERSONAL_ACCESS_TOKEN;
+const AIRTABLE_PAT = process.env.AIRTABLE_PERSONAL_ACCESS_TOKEN;
 const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID;
 
-// Conecta na base do Airtable com as credenciais
-const base = new Airtable({ apiKey: AIRTABLE_PERSONAL_ACCESS_TOKEN }).base(AIRTABLE_BASE_ID);
+const base = new Airtable({ apiKey: AIRTABLE_PAT }).base(AIRTABLE_BASE_ID);
 
-// Função serverless do Vercel que responde às requisições para /api/cadastro
-export default async function handler(req, res) {
-  // Permite apenas requisições POST (para cadastrar novos usuários)
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Método não permitido." });
-  }
-
-  // Extrai os campos enviados no corpo da requisição
-  const { nome, email, senha, endereco, telefone, tipo_usuario } = req.body;
-
-  // Validação: email, senha e tipo de usuário são obrigatórios
-  if (!email || !senha || !tipo_usuario) {
-    return res.status(400).json({ error: "Campos obrigatórios faltando." });
-  }
-
-  try {
-    // 1. Verifica se o e-mail já existe na tabela "usuarios"
-    const existingUsers = await base("usuarios")
-      .select({
-        maxRecords: 1, // retorna no máximo 1 registro
-        filterByFormula: `{Email} = '${email}'`, // busca por e-mail igual
-      })
-      .firstPage();
-
-    // Se já existe, retorna erro 409 (conflito)
-    if (existingUsers.length > 0) {
-      return res.status(409).json({ error: "Este e-mail já está cadastrado." });
+export default async function (req, res) { 
+    if (req.method !== 'POST') {
+        return res.status(405).json({ message: 'Método não permitido.' });
     }
 
-    // 2. Gera o hash (criptografia) da senha para segurança
-    const senhaHash = await bcrypt.hash(senha, 10); // "10" = fator de custo
-    // Gera um ID único para o usuário
-    const userId = crypto.randomUUID();
+    try {
+        const { nome, email, senha, tipo, endereco, telefone } = req.body;
 
-    // 3. Cria um novo registro na tabela de "usuarios" no Airtable
-    await base("usuarios").create([
-      {
-        fields: {
-          Id: userId,
-          Nome: nome,
-          Email: email,
-          Senha: senhaHash,
-          Tipo: tipo_usuario,
-        },
-      },
-    ]);
+        if (!nome || !email || !senha || !tipo) {
+            return res.status(400).json({ message: 'Dados básicos (nome, email, senha, tipo) são obrigatórios.' });
+        }
+        
+        const existingRecords = await base('Usuarios').select(
+            {
+                filterByFormula: `{Email} = '${email}'`,
+                maxRecords: 1,
+                view: "Grid view"
+            }
+        ).firstPage();
 
-    // 4. Caso o usuário seja "Doador" ou "Ponto de Coleta", cria também o perfil específico
-    if (tipo_usuario === "Doador" || tipo_usuario === "PontoColeta") {
-      // Define em qual tabela criar: "doadores" ou "pontoscoleta"
-      const profileTable = tipo_usuario === "Doador" ? "doadores" : "pontoscoleta";
-
-      // Cria o perfil vinculado ao usuário
-      await base(profileTable).create([
+        if (existingRecords.length > 0)
         {
-          fields: {
-            UsuarioId: userId, // relacionamento com a tabela usuarios
-            Endereco: endereco,
-            Telefone: telefone,
-          },
-        },
-      ]);
-    }
+            return res.status(409).json({ message: 'Email já cadastrado.' });
+        }
 
-    // Se deu tudo certo, retorna status 201 (criado) com mensagem de sucesso
-    res.status(201).json({ message: `${tipo_usuario} cadastrado com sucesso!`, id: userId });
-  } catch (error) {
-    // Caso ocorra algum erro no processo, loga no console e retorna erro 500
-    console.error("Erro no cadastro:", error.message);
-    res.status(500).json({ error: "Falha interna ao cadastrar o usuário." });
-  }
-}
+        const userRecords = await base('Usuarios').create
+        ([
+            {
+                    "fields": {
+                    "Nome": nome,     
+                    "Email": email,
+                    "Senha": senha,   
+                    "Tipo": tipo      
+                    }
+                }
+        ]);
+
+        const novoUsuarioId = userRecords[0].id; 
+        if (tipo === 'Doador')
+        {
+            if (!endereco || !telefone)
+            {
+                return res.status(400).json({ message: 
+                    'Endereço e Telefone são obrigatórios para Doadores.'});
+            }
+
+            const doadorRecords = await base('Doadores').create
+            ([
+                {
+                    "fields": {
+                        "Endereço": endereco,     
+                        "Telefone": telefone,
+                        "Usuario": [novoUsuarioId] 
+                    }
+                }
+            ]);
+            return res.status(200).json
+            ({ 
+                message: 'Cadastro de Usuário e Doador concluído!',
+                usuarioId: userRecords[0].id,
+                doadorId: doadorRecords[0].id
+            });
+        } 
+        else if (tipo === 'PontoDeColeta')
+        {
+            return res.status(200).json
+            ({ 
+                message: 'Cadastro de Usuário (Ponto de Coleta) concluído!',
+                usuarioId: userRecords[0].id
+            });
+        }      
+        else 
+        {
+            return res.status(200).json
+            ({ 
+                message: 'Cadastro de Usuário Básico concluído! (Tipo não mapeado).',
+                usuarioId: userRecords[0].id
+            });
+        }
+    } 
+    catch (error) 
+    {
+        console.error("Erro no Fluxo de Cadastro:", error.message, error.stack); 
+        return res.status(500).json({ 
+            message: 'Erro interno ao processar o cadastro.',
+            details: error.message,
+            code: error.code
+        });
+    }
+};

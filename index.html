@@ -1,79 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
+
 <head>
-    <title>Teste de Comunicação Vercel-Airtable</title>
-    <style>
-        body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; }
-        h1 { color: #0070f3; }
-        #status { margin-top: 15px; padding: 15px; border: 1px solid #ccc; background-color: #f7f7f7; white-space: pre-wrap; word-break: break-all; }
-        label { display: block; margin-top: 10px; font-weight: bold; }
-        input[type="text"], input[type="email"], input[type="password"] { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
-        button { background-color: #0070f3; color: white; padding: 10px 15px; border: none; cursor: pointer; margin-top: 20px; }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Varal dos Sonhos</title>
+    <link rel="stylesheet" href="./css/style.css">
 </head>
+
 <body>
-    <h1>Teste de Envio para a Tabela "Usuarios"</h1>
+    <header>
+      <div class="container-header">
+        <nav class="nav-menu">
+          <ul class="menu-esquerda">
+            <li><a href="index.html">Início</a></li>
+            <li><a href="cartinhas.html">Varal Virtual</a></li>
+            <li><a href="carrinho.html">Carrinho</a></li>
+            <li><a href="pontos.html">Pontos de Coleta</a></li>
+          </ul>
+          <ul class="menu-direita">
+            <li><a href="login.html">Login</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
 
-    <form id="airtableForm">
-        <label for="nome">Nome para Teste (Col. Nome):</label>
-        <input type="text" id="nome" name="nome" required value="Usuário Vercel Teste">
-        
-        <label for="email">Email para Teste (Col. Email):</label>
-        <input type="email" id="email" name="email" required value="teste_airtable@vercel.com">
-        
-        <label for="senha">Senha (Col. Senha):</label>
-        <input type="password" id="senha" name="senha" required value="123456">
+    <main>
+      <section class="apresentacao">
+        <div class="nuvem-container">
+          <img src="../imagens/logo-nuvem1.png" alt="nuvem" class="nuvem" width="400">
+          <br>
+          <img src="../imagens/menssagem.png" alt="menssagem" class="nuvem" width="330">
+          <br>
+          <a href="cartinhas.html" class="btn">Quero Adotar um Sonho</a>
+        </div>
+      </section>
+    </main>
 
-        <label for="tipo">Tipo (Col. Tipo):</label>
-        <input type="text" id="tipo" name="tipo" required value="Doador">
-        
-        <button type="submit">Enviar Dados de Teste</button>
-    </form>
-
-    <h2>Status da Comunicação:</h2>
-    <pre id="status">Aguardando envio...</pre>
-
-    <script>
-        document.getElementById('airtableForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const statusDiv = document.getElementById('status');
-            statusDiv.textContent = 'Enviando... Aguarde a resposta do Vercel...';
-            statusDiv.style.backgroundColor = '#fffacd'; 
-
-            // 1. Captura dos novos campos
-            const nome = document.getElementById('nome').value;
-            const email = document.getElementById('email').value;
-            const senha = document.getElementById('senha').value;
-            const tipo = document.getElementById('tipo').value;
-            
-            try {
-                // 2. Envio dos novos campos no corpo da requisição
-                const response = await fetch('/api/testar-airtable', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ nome, email, senha, tipo }) 
-                });
-
-                const text = await response.text();
-                const data = text ? JSON.parse(text) : {};
-
-                if (response.ok) {
-                    statusDiv.textContent = '✅ SUCESSO! Dados inseridos na tabela "Usuarios" do Airtable.\n\n' + JSON.stringify(data, null, 2);
-                    statusDiv.style.backgroundColor = '#e6ffe6'; 
-                } else {
-                    statusDiv.textContent = `❌ FALHA! Status HTTP: ${response.status}.\n\nMensagem do Servidor:\n${JSON.stringify(data, null, 2)}`;
-                    statusDiv.style.backgroundColor = '#ffe6e6'; 
-                    console.error("Erro do Servidor:", data);
-                }
-
-            } catch (error) {
-                statusDiv.textContent = '🚨 ERRO DE REDE/CÓDIGO: ' + error.message + '\n\nVerifique os Logs do Vercel para mais detalhes sobre a falha da função.';
-                statusDiv.style.backgroundColor = '#ffe6e6';
-                console.error('Erro geral na requisição:', error);
-            }
-        });
-    </script>
+    <footer>
+        <p>© 2025 Varal dos Sonhos | Desenvolvido com amor 💙</p>
+    </footer>
 </body>
 </html>
+
+
+
+
+
+  
