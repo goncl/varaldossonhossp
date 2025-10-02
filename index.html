@@ -7,7 +7,7 @@
         h1 { color: #0070f3; }
         #status { margin-top: 15px; padding: 15px; border: 1px solid #ccc; background-color: #f7f7f7; white-space: pre-wrap; word-break: break-all; }
         label { display: block; margin-top: 10px; font-weight: bold; }
-        input[type="text"], input[type="email"] { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+        input[type="text"], input[type="email"], input[type="password"] { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
         button { background-color: #0070f3; color: white; padding: 10px 15px; border: none; cursor: pointer; margin-top: 20px; }
     </style>
 </head>
@@ -15,11 +15,17 @@
     <h1>Teste de Envio para a Tabela "Usuarios"</h1>
 
     <form id="airtableForm">
-        <label for="nome">Nome para Teste (Airtable Coluna "Nome"):</label>
-        <input type="text" id="nome" name="nome" required value="Teste Vercel">
+        <label for="nome">Nome para Teste (Col. Nome):</label>
+        <input type="text" id="nome" name="nome" required value="Usuário Vercel Teste">
         
-        <label for="email">Email para Teste (Airtable Coluna "Email"):</label>
-        <input type="email" id="email" name="email" required value="teste@vercel.com">
+        <label for="email">Email para Teste (Col. Email):</label>
+        <input type="email" id="email" name="email" required value="teste_airtable@vercel.com">
+        
+        <label for="senha">Senha (Col. Senha):</label>
+        <input type="password" id="senha" name="senha" required value="123456">
+
+        <label for="tipo">Tipo (Col. Tipo):</label>
+        <input type="text" id="tipo" name="tipo" required value="Doadores">
         
         <button type="submit">Enviar Dados de Teste</button>
     </form>
@@ -32,37 +38,37 @@
             e.preventDefault();
             const statusDiv = document.getElementById('status');
             statusDiv.textContent = 'Enviando... Aguarde a resposta do Vercel...';
-            statusDiv.style.backgroundColor = '#fffacd'; // Amarelo claro
+            statusDiv.style.backgroundColor = '#fffacd'; 
 
+            // 1. Captura dos novos campos
             const nome = document.getElementById('nome').value;
             const email = document.getElementById('email').value;
-
+            const senha = document.getElementById('senha').value;
+            const tipo = document.getElementById('tipo').value;
+            
             try {
-                // A requisição vai para a sua função serverless no Vercel
+                // 2. Envio dos novos campos no corpo da requisição
                 const response = await fetch('/api/testar-airtable', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ nome, email })
+                    body: JSON.stringify({ nome, email, senha, tipo }) 
                 });
 
-                // Tenta ler a resposta como JSON
                 const text = await response.text();
                 const data = text ? JSON.parse(text) : {};
 
                 if (response.ok) {
                     statusDiv.textContent = '✅ SUCESSO! Dados inseridos na tabela "Usuarios" do Airtable.\n\n' + JSON.stringify(data, null, 2);
-                    statusDiv.style.backgroundColor = '#e6ffe6'; // Verde claro
+                    statusDiv.style.backgroundColor = '#e6ffe6'; 
                 } else {
-                    // Trata a falha da função serverless
                     statusDiv.textContent = `❌ FALHA! Status HTTP: ${response.status}.\n\nMensagem do Servidor:\n${JSON.stringify(data, null, 2)}`;
-                    statusDiv.style.backgroundColor = '#ffe6e6'; // Vermelho claro
+                    statusDiv.style.backgroundColor = '#ffe6e6'; 
                     console.error("Erro do Servidor:", data);
                 }
 
             } catch (error) {
-                // Trata o erro de rede ou de parsing JSON
                 statusDiv.textContent = '🚨 ERRO DE REDE/CÓDIGO: ' + error.message + '\n\nVerifique os Logs do Vercel para mais detalhes sobre a falha da função.';
                 statusDiv.style.backgroundColor = '#ffe6e6';
                 console.error('Erro geral na requisição:', error);
