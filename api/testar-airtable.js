@@ -5,7 +5,7 @@ import Airtable from 'airtable';
 // Inicialize o Airtable (usa as variáveis de ambiente configuradas no Vercel)
 const base = new Airtable({ apiKey: process.env.AIRTABLE_PERSONAL_ACCESS_TOKEN }) 
     .base(process.env.AIRTABLE_BASE_ID);
-  
+
 const TABLE_NAME = process.env.AIRTABLE_TABLE_NAME; 
 
 // Exportação default para Vercel Serverless Function

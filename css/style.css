@@ -1,26 +1,22 @@
-/* Importa a fonte personalizada do Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Lemon+Tuesday&display=swap');
 
-/* Reset básico de margens, espaçamentos e box-sizing */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Corpo da página */
 body {
-  font-family: 'Open Sans', sans-serif; /* Fonte padrão */
-  background: url('../imagens/fundo-nuvens.png') no-repeat center center fixed; /* Imagem de fundo fixa */
+  font-family: 'Open Sans', sans-serif;
+  background: url('../imagens/fundo-nuvens.png') no-repeat center center fixed;
   background-size: cover; /* Faz a imagem preencher toda a tela */
   min-height: 100vh; /* Garante altura mínima da viewport */
   display: flex; /* Ativa o flexbox */
   flex-direction: column; /* Organiza os elementos em coluna */
 }
 
-/* Cabeçalho fixo no topo */
 header {
-  background-color: #4a90e2; /* Fundo azul */
+  background-color: #4a90e2; 
   padding: 10px 20px; /* Espaçamento interno */
   position: sticky; /* Cabeçalho fixo ao rolar */
   top: 0; /* Fica preso no topo */
@@ -67,7 +63,6 @@ header {
   text-decoration: underline; /* Sublinha ao passar o mouse */
 }
 
-/* Área principal da página */
 main {
   flex: 1; /* Ocupa o espaço restante da tela */
   display: flex;
@@ -106,7 +101,6 @@ main {
   background-color: #357ABD; /* Azul mais escuro */
 }
 
-/* Rodapé */
 footer {
   text-align: center; /* Centraliza texto */
   padding: 10px; /* Espaçamento interno */
