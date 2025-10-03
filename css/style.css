@@ -1,21 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Lemon+Tuesday&display=swap');
 
+/* Reset básico para margens e paddings */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* Estilização do corpo da página */
 body {
-  font-family: 'Open Sans', sans-serif;
-  background: url('../imagens/fundo-nuvens.png') no-repeat center center fixed;
+  font-family: 'Open Sans', sans-serif; /* Fonte padrão */
+  background: url('../imagens/fundo-nuvens.png') no-repeat center center fixed;/* Imagem de fundo */
   background-size: cover; /* Faz a imagem preencher toda a tela */
   min-height: 100vh; /* Garante altura mínima da viewport */
   display: flex; /* Ativa o flexbox */
   flex-direction: column; /* Organiza os elementos em coluna */
 }
 
-header {
+header { /* Estilização do cabeçalho */
   background-color: #4a90e2; 
   padding: 10px 20px; /* Espaçamento interno */
   position: sticky; /* Cabeçalho fixo ao rolar */
