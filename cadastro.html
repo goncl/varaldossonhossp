@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Usuário</title>
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="icon" type="image/png" href="/imagens/logo-fabrica.png">
     
 </head>
@@ -69,7 +69,7 @@
 
             try {
                 // Endpoint da nossa função de cadastro
-                const response = await fetch('/api/cadastrar-usuario', { 
+                const response = await fetch('/api/cadastro', { 
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ nome, email, senha, tipo, endereco, telefone }) 
