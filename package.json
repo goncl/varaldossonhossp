@@ -1,12 +1,1 @@
-{
-  "name": "varal-dos-sonhos-api", 
-  "version": "1.0.0",             
-  "type": "module",               
-  "engines": {
-    "node": "20.x"                
-  },
-  "dependencies": {
-    "airtable": "^0.12.2",                  
-    "bcryptjs": "^3.0.2"         
-  }
-}
+
