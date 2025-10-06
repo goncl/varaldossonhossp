@@ -1,1 +1,13 @@
-
+{
+    "name": "varal-dos-sonhos-api",
+    "version": "1.0.0",
+    "description": "API e Front-end para o projeto Varal dos Sonhos",
+    "type": "module",
+    "engines": {
+    "node": "20.x"
+    },
+    "dependencies": {
+    "airtable": "^0.12.2",
+    "bcryptjs": "^2.4.3"
+    }
+}
