@@ -1,4 +1,4 @@
-// Arquivo: api/cadastro.js 
+// Arquivo: /api/cadastro.js 
 
 import Airtable from 'airtable'; 
 import bcrypt from 'bcryptjs';
@@ -58,7 +58,7 @@ export default async function (req, res) {
         const novoUsuarioId = userRecords[0].id; 
         
         // 5. FLUXO DOADOR E VINCULAÇÃO
-        if (tipo === 'Doador') {
+        if (tipo === 'Doadores') {
             if (!endereco || !telefone) {
                 return res.status(400).json({ message: 'Endereço e Telefone são obrigatórios para Doadores.'});
             }
