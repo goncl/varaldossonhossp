@@ -1,6 +1,7 @@
 // Arquivo: api/cadastrar-usuario.js
 
 import Airtable from 'airtable'; 
+import bcrypt from 'bcryptjs';
 
 // 🚨 INÍCIO DO CÓDIGO GARANTINDO A IMPORTAÇÃO E AS VARIÁVEIS
 const AIRTABLE_PAT = process.env.AIRTABLE_PERSONAL_ACCESS_TOKEN;
@@ -17,12 +18,13 @@ export default async function (req, res) {
 
     try {
         const { nome, email, senha, tipo, endereco, telefone } = req.body;
-
+        
+        // 1. VALIDAÇÃO BÁSICA
         if (!nome || !email || !senha || !tipo) {
             return res.status(400).json({ message: 'Dados básicos (nome, email, senha, tipo) são obrigatórios.' });
         }
         
-        // 1. CHECAGEM DE DUPLICIDADE
+        // 2. CHECAGEM DE DUPLICIDADE
         const existingRecords = await base('Usuarios').select(
             {
                 filterByFormula: `{Email} = '${email}'`,
@@ -35,7 +37,13 @@ export default async function (req, res) {
             return res.status(409).json({ message: 'Email já cadastrado.' });
         }
 
-        // 2. CADASTRO NA TABELA USUARIOS
+        // 3. CRIPTOGRAFIA DA SENHA (SEGURANÇA!)
+        // Cria um 'salt' (valor aleatório) para segurança extra
+        const salt = await bcrypt.genSalt(10);
+        // Gera o hash final que será armazenado no Airtable
+        const hashedPassword = await bcrypt.hash(senha, salt); 
+
+        // 4. CADASTRO NA TABELA USUARIOS
         const userRecords = await base('Usuarios').create([
             {
                 "fields": {
@@ -49,7 +57,7 @@ export default async function (req, res) {
 
         const novoUsuarioId = userRecords[0].id; 
         
-        // 3. FLUXO DOADOR E VINCULAÇÃO
+        // 5. FLUXO DOADOR E VINCULAÇÃO
         if (tipo === 'Doador') {
             if (!endereco || !telefone) {
                 return res.status(400).json({ message: 'Endereço e Telefone são obrigatórios para Doadores.'});
@@ -72,7 +80,7 @@ export default async function (req, res) {
             });
         } 
         
-        // 4. FLUXO PONTO DE COLETA
+        // 6. FLUXO PONTO DE COLETA
         else if (tipo === 'PontoDeColeta') {
             // Se precisar de Endereço/Telefone na tabela PontosDeColeta, o código deve ser adicionado aqui
             return res.status(200).json({ 
@@ -81,7 +89,7 @@ export default async function (req, res) {
             });
         }
         
-        // 5. FLUXO BÁSICO (Outros Tipos)
+        // 7. FLUXO BÁSICO (Outros Tipos)
         else {
             return res.status(200).json({ 
                 message: 'Cadastro de Usuário Básico concluído! (Tipo não mapeado).',

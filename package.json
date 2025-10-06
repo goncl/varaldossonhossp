@@ -6,8 +6,7 @@
     "node": "20.x"                
   },
   "dependencies": {
-    "airtable": "^0.12.2",        
-    "bcrypt": "^6.0.0",           
+    "airtable": "^0.12.2",                  
     "bcryptjs": "^3.0.2"         
   }
 }
