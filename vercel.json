@@ -2,7 +2,7 @@
   "version": 2,
   "functions": {
     "api/**/*.js": {
-      "runtime": "nodejs18.x",
+      "runtime": "vercel-nodejs@20.x",
       "maxDuration": 10
     }
   },
@@ -17,3 +17,4 @@
     }
   ]
 }
+
