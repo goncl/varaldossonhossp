@@ -1,4 +1,4 @@
-// Arquivo: api/cadastrar-usuario.js
+// Arquivo: api/cadastro.js 
 
 import Airtable from 'airtable'; 
 import bcrypt from 'bcryptjs';
@@ -49,7 +49,7 @@ export default async function (req, res) {
                 "fields": {
                     "Nome": nome,
                     "Email": email,
-                    "Senha": senha,
+                    "Senha": hashedPassword,
                     "Tipo": tipo
                 }
             }
