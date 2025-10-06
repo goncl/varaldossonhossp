@@ -58,7 +58,7 @@ export default async function (req, res) {
         const novoUsuarioId = userRecords[0].id; 
         
         // 5. FLUXO DOADOR E VINCULAÇÃO
-        if (tipo === 'Doadores') {
+        if (tipo === 'Doador') {
             if (!endereco || !telefone) {
                 return res.status(400).json({ message: 'Endereço e Telefone são obrigatórios para Doadores.'});
             }
